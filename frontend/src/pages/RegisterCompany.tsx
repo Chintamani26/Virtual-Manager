@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Navbar from '../components/ui/Navbar'; 
+import Navbar from '../components/Navbar'; 
 
 // Define employee data type
 type Employee = {
