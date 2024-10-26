@@ -7,6 +7,8 @@ import EmployeePage from './pages/EmployeePage';
 import Dashboard from './pages/Dashboard';
 import RegisterCompanyPage from './pages/RegisterCompany';
 import AuthPage from './pages/AuthPage';
+import ProjectManagement from './pages/ProjectManagement';
+import EmployeeDashboard from './pages/EmployeeDashboard';
 // import FloatingButton from './components/FloatingButton';
 
 const App: React.FC = () => {
@@ -21,6 +23,8 @@ const App: React.FC = () => {
                     <Route path="/assign-task" element={<AssignTaskPage />} />
                     <Route path="/emp" element={<EmployeePage />} />
                     <Route path="/regc" element={<RegisterCompanyPage />} />
+                    <Route path="/proman" element={<ProjectManagement />} />
+                    <Route path="/empd" element={<EmployeeDashboard />} />
                     {/* <FloatingButton /> */}
                     {/* <Route path="/forgot-password" element={<ForgotPassword />} /> */}
                 </Routes>
