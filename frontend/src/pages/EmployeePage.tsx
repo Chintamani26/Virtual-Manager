@@ -1,8 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useThemeStore } from '../store/themeStore';
 import Navbar from '../components/Navbar';
 
-// Define a type for employee data
 type Employee = {
   id: number;
   name: string;
@@ -11,12 +10,13 @@ type Employee = {
   team: string;
   domain: string;
   skills: string[];
-  avatar: string; // Image URL for avatar
+  avatar: string;
   status: "Active" | "Inactive";
+  experience?: string; // Mark as optional if it may not be present
+  location?: string;    // Mark as optional if it may not be present
 };
 
-// Dummy employee data
-const employees: Employee[] = [
+const initialEmployees: Employee[] = [
   {
     id: 1,
     name: "Alice Johnson",
@@ -27,6 +27,8 @@ const employees: Employee[] = [
     skills: ["React", "TypeScript", "CSS"],
     avatar: "https://i.pravatar.cc/150?img=1",
     status: "Active",
+    experience: "3 years",
+    location: "New York",
   },
   {
     id: 2,
@@ -38,39 +40,8 @@ const employees: Employee[] = [
     skills: ["Node.js", "PostgreSQL", "Express"],
     avatar: "https://i.pravatar.cc/150?img=2",
     status: "Active",
-  },
-  {
-    id: 3,
-    name: "Charlie Davis",
-    role: "Data Scientist",
-    email: "charlie@example.com",
-    team: "AI Team",
-    domain: "Data Science",
-    skills: ["Python", "Machine Learning", "NLP"],
-    avatar: "https://i.pravatar.cc/150?img=3",
-    status: "Inactive",
-  },
-  {
-    id: 4,
-    name: "David Wilson",
-    role: "Full Stack Developer",
-    email: "david@example.com",
-    team: "Development Team",
-    domain: "Web Applications",
-    skills: ["JavaScript", "React", "Node.js"],
-    avatar: "https://i.pravatar.cc/150?img=4",
-    status: "Active",
-  },
-  {
-    id: 5,
-    name: "Eva Green",
-    role: "Product Manager",
-    email: "eva@example.com",
-    team: "Product Team",
-    domain: "Product Management",
-    skills: ["Agile", "Scrum", "Communication"],
-    avatar: "https://i.pravatar.cc/150?img=5",
-    status: "Active",
+    experience: "5 years",
+    location: "San Francisco",
   },
   {
     id: 6,
@@ -126,10 +97,12 @@ const employees: Employee[] = [
     skills: ["SEO", "Content Creation", "Social Media"],
     avatar: "https://i.pravatar.cc/150?img=10",
     status: "Active",
-  },
+  }
+  // Add additional employees with experience and location fields as appropriate
 ];
 
-const EmployeeCard: React.FC<Employee> = ({
+const EmployeeCard: React.FC<Employee & { onUpdate: (id: number) => void }> = ({
+  id,
   name,
   role,
   email,
@@ -138,54 +111,70 @@ const EmployeeCard: React.FC<Employee> = ({
   skills,
   avatar,
   status,
+  experience,
+  location,
+  onUpdate,
 }) => {
   return (
     <div className="bg-white shadow-md rounded-lg p-4 m-2 flex-none w-1/4 flex flex-col items-center">
-      <img
-        src={avatar}
-        alt={`${name}'s avatar`}
-        className="w-24 h-24 rounded-full mb-4"
-      />
+      <img src={avatar} alt={`${name}'s avatar`} className="w-24 h-24 rounded-full mb-4" />
       <h2 className="text-xl font-semibold">{name}</h2>
       <p className="text-gray-600">{role}</p>
       <p className="text-sm text-gray-500">{email}</p>
-      <div className="mt-2 text-sm text-gray-700">
-        <strong>Team:</strong> {team}
-      </div>
-      <div className="text-sm text-gray-700">
-        <strong>Domain:</strong> {domain}
-      </div>
+      <p className="text-sm text-gray-700"><strong>Team:</strong> {team}</p>
+      <p className="text-sm text-gray-700"><strong>Domain:</strong> {domain}</p>
+      <p className="text-sm text-gray-700"><strong>Experience:</strong> {experience || 'N/A'}</p>
+      <p className="text-sm text-gray-700"><strong>Location:</strong> {location || 'N/A'}</p>
       <div className="mt-2">
         <strong>Skills:</strong>
         <ul className="list-disc list-inside text-sm text-gray-600">
-          {skills.map((skill, index) => (
-            <li key={index}>{skill}</li>
-          ))}
+          {skills.map((skill, index) => <li key={index}>{skill}</li>)}
         </ul>
       </div>
-      <span
-        className={`mt-4 px-4 py-2 rounded-full text-sm font-semibold ${
-          status === "Active"
-            ? "bg-green-100 text-green-700"
-            : "bg-red-100 text-red-700"
-        }`}
-      >
+      <span className={`mt-4 px-4 py-2 rounded-full text-sm font-semibold ${status === "Active" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>
         {status}
       </span>
+      <button onClick={() => onUpdate(id)} className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+        Update
+      </button>
     </div>
   );
 };
 
 const EmployeePage: React.FC = () => {
   const { isDarkMode } = useThemeStore();
+  const [employees, setEmployees] = useState(initialEmployees);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const handleUpdate = (id: number) => {
+    const updatedEmployees = employees.map((employee) => 
+      employee.id === id ? { ...employee, status: employee.status === "Active" ? "Inactive" : "Active" } : employee
+    );
+    setEmployees(updatedEmployees);
+  };
+
+  const filteredEmployees = employees.filter((employee) => 
+    employee.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    employee.role.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    employee.team.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div className={`min-h-screen ${isDarkMode ? 'bg-gray-800 text-gray-100' : 'bg-gray-100 text-gray-800'}`}>
       <Navbar />
-      <h1 className="text-3xl font-bold text-center mb-8 p-4">Employee Directory</h1>
+      <div className="flex justify-center mt-6">
+        <input
+          type="text"
+          placeholder="Search employees..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="border p-2 rounded-lg w-1/2"
+        />
+      </div>
+      <h1 className="text-3xl font-bold text-center mt-8 mb-8">Employee Directory</h1>
       <div className="flex flex-wrap justify-between pl-7 pr-7">
-        {employees.map((employee) => (
-          <EmployeeCard key={employee.id} {...employee} />
+        {filteredEmployees.map((employee) => (
+          <EmployeeCard key={employee.id} {...employee} onUpdate={handleUpdate} />
         ))}
       </div>
     </div>

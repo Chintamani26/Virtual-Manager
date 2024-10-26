@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import { FaUsers, FaClipboardList, FaRegChartBar } from 'react-icons/fa';
 import { useThemeStore } from '../store/themeStore';
+import FloatingButton from '../components/FloatingButton';
 
 const Dashboard: React.FC = () => {
   const { isDarkMode } = useThemeStore();
@@ -84,6 +85,7 @@ const Dashboard: React.FC = () => {
           </div>
         </div>
       </div>
+      <FloatingButton />
     </div>
   );
 };
