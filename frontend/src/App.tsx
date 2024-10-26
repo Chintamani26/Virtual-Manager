@@ -12,9 +12,9 @@ const App: React.FC = () => {
             <div className="container mx-auto">
                 <Routes>
                     <Route path="/" element={<Dashboard />} />
+                    <Route path="/emp" element={<EmployeePage />} />
                     <Route path="/tasks" element={<TaskPage />} />
                     <Route path="/assign-task" element={<AssignTaskPage />} />
-                    <Route path="/emp" element={<EmployeePage />} />
                     <Route path="/regc" element={<RegisterCompanyPage />} />
                 </Routes>
             </div>

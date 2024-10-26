@@ -8,8 +8,9 @@ const DarkModeToggle: React.FC = () => {
     <button
       onClick={toggleDarkMode}
       className="p-2 rounded-full bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-white"
+      aria-label="Toggle Dark Mode"
     >
-      {isDarkMode ? '🌞' : '🌙'}  
+      {isDarkMode ? '🌞' : '🌙'}
     </button>
   );
 };

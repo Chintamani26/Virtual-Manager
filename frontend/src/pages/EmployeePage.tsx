@@ -1,4 +1,6 @@
 import React from 'react';
+import { useThemeStore } from '../store/themeStore';
+import Navbar from '../components/Navbar';
 
 // Define a type for employee data
 type Employee = {
@@ -175,10 +177,13 @@ const EmployeeCard: React.FC<Employee> = ({
 };
 
 const EmployeePage: React.FC = () => {
+  const { isDarkMode } = useThemeStore();
+
   return (
-    <div className="min-h-screen bg-gray-100 p-10">
-      <h1 className="text-3xl font-bold text-center mb-8">Employee Directory</h1>
-      <div className="flex flex-wrap justify-between">
+    <div className={`min-h-screen ${isDarkMode ? 'bg-gray-800 text-gray-100' : 'bg-gray-100 text-gray-800'}`}>
+      <Navbar />
+      <h1 className="text-3xl font-bold text-center mb-8 p-4">Employee Directory</h1>
+      <div className="flex flex-wrap justify-between pl-7 pr-7">
         {employees.map((employee) => (
           <EmployeeCard key={employee.id} {...employee} />
         ))}
